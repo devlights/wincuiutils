@@ -1,0 +1,2 @@
+# wincuiutils
+自分用Windows環境でCUI作業する際のユーティリティ
