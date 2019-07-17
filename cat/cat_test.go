@@ -21,11 +21,15 @@ func TestCat(t *testing.T) {
 	}
 
 	// Act
-	err := Cat(&parameter)
+	written, err := Cat(&parameter)
 
 	// Assert
 	if err != nil {
 		t.Errorf("エラーが発生 %v", err)
+	}
+
+	if written == 0 {
+		t.Error("出力されていない")
 	}
 
 	outStr := outBuf.String()

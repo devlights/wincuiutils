@@ -1,7 +1,6 @@
 package cat
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -9,7 +8,9 @@ import (
 
 // Input - Cat()の引数を表します
 type Input struct {
-	InStream  io.Reader
+	// 入力
+	InStream io.Reader
+	// 出力
 	OutStream io.Writer
 }
 
@@ -22,21 +23,20 @@ func (p *parameterError) Error() string {
 }
 
 // Cat - Catコマンドを模倣している関数
-func Cat(parameter *Input) error {
-	if parameter == nil {
-		return &parameterError{Message: "Input"}
+func Cat(p *Input) (int64, error) {
+	if p == nil {
+		return 0, &parameterError{Message: "Input"}
 	}
 
 	var out io.Writer = os.Stdout
-	if parameter.OutStream != nil {
-		out = parameter.OutStream
+	if p.OutStream != nil {
+		out = p.OutStream
 	}
 
-	scanner := bufio.NewScanner(parameter.InStream)
-	for scanner.Scan() {
-		txt := scanner.Text()
-		out.Write([]byte(txt))
+	written, err := io.Copy(out, p.InStream)
+	if err != nil {
+		return 0, err
 	}
 
-	return nil
+	return written, nil
 }
